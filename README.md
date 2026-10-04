@@ -1,4 +1,4 @@
-# 🧮 Bilimsel Hesap Makinesi — proj1
+# 🧮 Bilimsel Hesap Makinesi 
 
 Tek dosyalık, offline çalışan bilimsel hesap makinesi. Kendi HTML sitene 2 dakikada eklenir. Dark + Light tema destekli, 4 sekmeli.
 
