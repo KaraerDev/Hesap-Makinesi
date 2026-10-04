@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilimsel Hesap Makinesi</title>
+<meta name="description" content="Bilimsel hesap makinesi: trigonometri, logaritma, faktöriyel, nCr nPr, EBOB EKOK, denklem çözme ve birim çevirici. Ücretsiz online hesap makinesi.">
+<meta name="theme-color" content="#0F172A">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<meta property="og:title" content="Bilimsel Hesap Makinesi">
+<meta property="og:description" content="Trigonometri, logaritma, denklem ve birim çevirici içeren ücretsiz bilimsel hesap makinesi.">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --bg:#0F172A;
+  --card:#1E293B;
+  --screen:#020617;
+  --screen-text:#F8FAFC;
+  --screen-sub:#94A3B8;
+  --text:#F1F5F9;
+  --muted:#94A3B8;
+  --border:#334155;
+  --num:#334155;
+  --num-hover:#475569;
+  --op:#0EA5E9;
+  --op-hover:#0284C7;
+  --sci:#1E3A5F;
+  --sci-hover:#274B73;
+  --eq:#10B981;
+  --eq-hover:#059669;
+  --danger:#EF4444;
+  --danger-hover:#DC2626;
+  --warn:#F59E0B;
+  --input:#0F172A;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+  --radius:16px;
+}
+[data-theme="light"]{
+  --bg:#F1F5F9;
+  --card:#FFFFFF;
+  --screen:#F8FAFC;
+  --screen-text:#0F172A;
+  --screen-sub:#64748B;
+  --text:#0F172A;
+  --muted:#64748B;
+  --border:#E2E8F0;
+  --num:#F1F5F9;
+  --num-hover:#E2E8F0;
+  --op:#0EA5E9;
+  --op-hover:#0284C7;
+  --sci:#E0F2FE;
+  --sci-hover:#BAE6FD;
+  --eq:#10B981;
+  --eq-hover:#059669;
+  --danger:#EF4444;
+  --danger-hover:#DC2626;
+  --input:#F8FAFC;
+  --shadow:0 10px 30px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding:4px;overflow-x:hidden;
+}
+header.topbar{
+  width:100%;max-width:480px;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:4px;
+}
+header.topbar h1{font-size:clamp(.9rem,3.5vw,1.05rem);margin:0}
+#themeBtn{
+  border:1px solid var(--border);background:var(--card);color:var(--text);
+  border-radius:8px;font-size:1rem;padding:4px 8px;cursor:pointer;min-height:36px;
+}
+.app{
+  width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+}
+nav.tabs{display:flex;gap:4px;padding:6px;background:transparent}
+nav.tabs button{
+  flex:1;border:1px solid var(--border);background:var(--input);color:var(--text);
+  border-radius:8px;padding:6px 4px;font-size:clamp(.65rem,2.6vw,.75rem);cursor:pointer;
+  min-height:36px;touch-action:manipulation;
+}
+nav.tabs button.active{background:var(--op);border-color:var(--op);color:#fff;font-weight:700}
+.tab{display:none;padding:6px}
+.tab.active{display:block}
+.screen{
+  background:var(--screen);border:1px solid var(--border);border-radius:10px;
+  padding:6px;min-height:62px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;
+  word-break:break-all;margin-bottom:4px;
+}
+#exprHist{min-height:1.4em;font-size:clamp(.75rem,3vw,.85rem);color:var(--screen-sub);text-align:right;overflow-x:auto;white-space:nowrap}
+#exprMain{font-size:clamp(1rem,5vw,1.3rem);font-weight:700;color:var(--screen-text);text-align:right;overflow-x:auto;white-space:nowrap}
+#errorBox{font-size:.8rem;color:var(--danger);min-height:1.2em;text-align:right}
+.toolbar{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:4px}
+.toolbar button,.toolbar select{
+  border:1px solid var(--border);background:var(--input);color:var(--text);
+  border-radius:8px;padding:4px 8px;font-size:.8rem;cursor:pointer;min-height:36px;touch-action:manipulation;
+}
+.toolbar button.on{background:var(--op);color:#fff;border-color:var(--op);font-weight:700}
+#memInd{display:inline-block;min-width:28px;text-align:center;font-weight:800;color:var(--warn);border:1px dashed var(--border);border-radius:8px;padding:4px 8px;font-size:.8rem}
+.memrow{display:flex;gap:4px;margin-bottom:4px}
+.memrow button{flex:1;border:1px solid var(--border);background:var(--input);color:var(--text);border-radius:8px;padding:4px 0;font-size:.8rem;cursor:pointer;min-height:36px;touch-action:manipulation}
+.grid{display:grid;gap:5px}
+.sci-grid{grid-template-columns:repeat(6,1fr);margin-bottom:4px}
+.basic-grid{grid-template-columns:repeat(5,1fr);margin-bottom:4px}
+button.key{
+  border:none;border-radius:8px;font-size:clamp(.78rem,3.2vw,.9rem);
+  min-height:38px;padding:4px 2px;cursor:pointer;touch-action:manipulation;color:var(--text);
+  transition:transform .04s ease;
+}
+button.key:active{transform:scale(.97)}
+.btn-num{background:var(--num)}
+.btn-num:hover{background:var(--num-hover)}
+.btn-op{background:var(--op);color:#fff;font-weight:700}
+.btn-op:hover{background:var(--op-hover)}
+.btn-sci{background:var(--sci);font-size:clamp(.62rem,2.6vw,.72rem)}
+.btn-sci:hover{background:var(--sci-hover)}
+.btn-eq{background:var(--eq);color:#fff;font-weight:800}
+.btn-eq:hover{background:var(--eq-hover)}
+.btn-danger{background:var(--danger);color:#fff;font-weight:700}
+.btn-danger:hover{background:var(--danger-hover)}
+button.key.inv{background:var(--warn);color:#111}
+.history{margin-top:4px;border-top:1px solid var(--border);padding-top:4px}
+.history h3{margin:2px 0;font-size:.8rem;display:flex;justify-content:space-between;align-items:center}
+.history h3 span.btns{display:flex;gap:4px}
+.small-btn{border:1px solid var(--border);background:var(--input);color:var(--text);border-radius:8px;padding:4px 8px;font-size:.75rem;cursor:pointer;min-height:36px}
+#histList{list-style:none;margin:4px 0 0;padding:0;max-height:80px;overflow:auto;display:flex;flex-direction:column;gap:4px}
+#histList li{background:var(--input);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+#histList .htext{flex:1;cursor:pointer;font-size:.85rem}
+#histList .htext b{display:block;font-size:.95rem}
+label.lbl{display:block;font-size:.8rem;color:var(--muted);margin:4px 0 2px}
+input[type=text],input[type=number],select.sel{
+  width:100%;background:var(--input);color:var(--text);border:1px solid var(--border);
+  border-radius:8px;padding:7px;font-size:.9rem;min-height:38px;
+}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.result-box{background:var(--screen);border:1px solid var(--border);border-radius:8px;padding:6px;margin-top:4px;color:var(--screen-text)}
+.result-box .big{font-size:clamp(1rem,5vw,1.3rem);font-weight:800;word-break:break-all}
+.formula{color:var(--screen-sub);font-size:.85rem;margin-top:4px}
+.warn{color:var(--warn);font-size:.85rem;margin-top:4px}
+.btnrow{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.btnrow button{flex:1;border:none;border-radius:8px;padding:6px 6px;min-height:38px;cursor:pointer;font-weight:700;touch-action:manipulation;background:var(--op);color:#fff}
+.btnrow button.ghost{background:var(--num);color:var(--text)}
+.bitops{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:4px}
+.bitops button{border:none;border-radius:8px;min-height:38px;cursor:pointer;background:var(--sci);color:var(--text);font-weight:700;touch-action:manipulation}
+.calc-mode{display:flex;gap:6px;margin:6px 0}
+.calc-mode button{flex:1;border:1px solid var(--border);background:var(--input);color:var(--text);border-radius:8px;padding:4px 8px;font-size:.8rem;cursor:pointer;min-height:36px;touch-action:manipulation}
+.calc-mode button.on{background:var(--op);color:#fff;border-color:var(--op);font-weight:700}
+footer{max-width:480px;color:var(--muted);font-size:.7rem;text-align:center;margin:4px 0}
+@media(max-width:380px){.sci-grid{grid-template-columns:repeat(6,1fr)}.bitops{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>🔢 Bilimsel Hesap Makinesi</h1>
+  <button id="themeBtn" title="Tema değiştir" aria-label="Tema değiştir">🌙</button>
+</header>
+<div class="app">
+  <nav class="tabs" role="tablist">
+    <button data-tab="calc" class="active" role="tab">Hesap Makinesi</button>
+    <button data-tab="conv" role="tab">Birim Çevirici</button>
+    <button data-tab="prog" role="tab">Programcı</button>
+    <button data-tab="eq" role="tab">Denklem</button>
+  </nav>
+  <section id="tab-calc" class="tab active">
+    <div class="screen">
+      <div id="exprHist">&nbsp;</div>
+      <div id="exprMain">0</div>
+      <div id="errorBox"></div>
+    </div>
+    <div class="toolbar">
+      <button id="degBtn" class="on" title="Derece/Radyan">DEG</button>
+      <button id="sciBtn" title="Bilimsel gösterim (F-E)">F-E</button>
+      <select id="fixSel" title="Ondalık basamak (FIX)">
+        <option value="">FIX: Kapalı</option>
+        <option value="0">FIX: 0</option>
+        <option value="1">FIX: 1</option>
+        <option value="2">FIX: 2</option>
+        <option value="3">FIX: 3</option>
+        <option value="4">FIX: 4</option>
+        <option value="5">FIX: 5</option>
+        <option value="6">FIX: 6</option>
+        <option value="7">FIX: 7</option>
+        <option value="8">FIX: 8</option>
+        <option value="9">FIX: 9</option>
+      </select>
+      <span id="memInd" title="Hafıza">M:0</span>
+      <button id="copyBtn" title="Sonucu kopyala">📋 Kopyala</button>
+      <button id="shareBtn" title="Hesabı link olarak paylaş">🔗 Paylaş</button>
+    </div>
+    <div class="calc-mode">
+      <button id="modeBasic" type="button">Basit</button>
+      <button id="modeSci" type="button" class="on">Bilimsel</button>
+    </div>
+    <div class="memrow">
+      <button data-mem="MC">MC</button>
+      <button data-mem="MR">MR</button>
+      <button data-mem="M+">M+</button>
+      <button data-mem="M-">M−</button>
+      <button data-mem="MS">MS</button>
+    </div>
+    <div class="grid sci-grid" id="sciGrid">
+      <button class="key btn-sci" data-ins="2nd" id="btn2nd">2nd</button>
+      <button class="key btn-sci" data-fn="sin" id="bSin">sin</button>
+      <button class="key btn-sci" data-fn="cos" id="bCos">cos</button>
+      <button class="key btn-sci" data-fn="tan" id="bTan">tan</button>
+      <button class="key btn-sci" data-ins="π">π</button>
+      <button class="key btn-sci" data-ins="sinh(">sinh</button>
+      <button class="key btn-sci" data-ins="cosh(">cosh</button>
+      <button class="key btn-sci" data-ins="tanh(">tanh</button>
+      <button class="key btn-sci" data-ins="log(">log</button>
+      <button class="key btn-sci" data-ins="ln(">ln</button>
+      <button class="key btn-sci" data-ins="log2(">log₂</button>
+      <button class="key btn-sci" data-ins="sqrt(">√</button>
+      <button class="key btn-sci" data-ins="cbrt(">∛</button>
+      <button class="key btn-sci" data-ins="^2">x²</button>
+      <button class="key btn-sci" data-ins="^3">x³</button>
+      <button class="key btn-sci" data-ins="^">xʸ</button>
+      <button class="key btn-sci" data-ins="10^(">10ˣ</button>
+      <button class="key btn-sci" data-ins="e^(">eˣ</button>
+      <button class="key btn-sci" data-act="inv">1/x</button>
+      <button class="key btn-sci" data-act="abs">|x|</button>
+      <button class="key btn-sci" data-ins="!">n!</button>
+      <button class="key btn-sci" data-ins=" mod ">mod</button>
+      <button class="key btn-sci" data-ins="e">e</button>
+      <button class="key btn-sci" data-ins="phi">φ</button>
+      <button class="key btn-sci" data-ins="tau">τ</button>
+      <button class="key btn-sci" data-ins="nCr(">nCr</button>
+      <button class="key btn-sci" data-ins="nPr(">nPr</button>
+      <button class="key btn-sci" data-ins="gcd(">EBOB</button>
+      <button class="key btn-sci" data-ins="lcm(">EKOK</button>
+      <button class="key btn-sci" data-ins="root(">ⁿ√x</button>
+      <button class="key btn-sci" data-ins="logb(">log<sub>b</sub></button>
+      <button class="key btn-sci" data-act="frac" title="Sonucu kesre çevir">S-D</button>
+    </div>
+    <div class="grid basic-grid">
+      <button class="key btn-danger" data-act="ac">AC</button>
+      <button class="key btn-danger" data-act="del">DEL</button>
+      <button class="key btn-op" data-ins="(">(</button>
+      <button class="key btn-op" data-ins=")">)</button>
+      <button class="key btn-op" data-ins="÷">÷</button>
+      <button class="key btn-num" data-ins="7">7</button>
+      <button class="key btn-num" data-ins="8">8</button>
+      <button class="key btn-num" data-ins="9">9</button>
+      <button class="key btn-op" data-ins="%">%</button>
+      <button class="key btn-op" data-ins="×">×</button>
+      <button class="key btn-num" data-ins="4">4</button>
+      <button class="key btn-num" data-ins="5">5</button>
+      <button class="key btn-num" data-ins="6">6</button>
+      <button class="key btn-sci" data-ins="Ans">Ans</button>
+      <button class="key btn-op" data-ins="-">−</button>
+      <button class="key btn-num" data-ins="1">1</button>
+      <button class="key btn-num" data-ins="2">2</button>
+      <button class="key btn-num" data-ins="3">3</button>
+      <button class="key btn-sci" data-ins="E">EXP</button>
+      <button class="key btn-op" data-ins="+">+</button>
+      <button class="key btn-num" data-act="neg">+/-</button>
+      <button class="key btn-num" data-ins="0">0</button>
+      <button class="key btn-num" data-ins=".">.</button>
+      <button class="key btn-sci" data-ins=",">,</button>
+      <button class="key btn-eq" data-act="eq">=</button>
+    </div>
+    <div class="history">
+      <h3>Geçmiş (son 30) <span class="btns"><button class="small-btn" id="clearHist">Tümünü Temizle</button></span></h3>
+      <ul id="histList"></ul>
+    </div>
+  </section>
+  <section id="tab-conv" class="tab">
+    <label class="lbl" for="catSel">Kategori</label>
+    <select id="catSel" class="sel">
+      <option value="length">Uzunluk</option>
+      <option value="weight">Ağırlık</option>
+      <option value="temp">Sıcaklık</option>
+      <option value="area">Alan</option>
+      <option value="volume">Hacim</option>
+      <option value="time">Zaman</option>
+      <option value="speed">Hız</option>
+      <option value="pressure">Basınç</option>
+      <option value="energy">Enerji</option>
+    </select>
+    <label class="lbl" for="convVal">Değer</label>
+    <input type="text" id="convVal" inputmode="decimal" placeholder="örn: 3,14">
+    <div class="row2">
+      <div><label class="lbl" for="fromSel">Kaynak birim</label><select id="fromSel" class="sel"></select></div>
+      <div><label class="lbl" for="toSel">Hedef birim</label><select id="toSel" class="sel"></select></div>
+    </div>
+    <div class="btnrow">
+      <button id="swapBtn" class="ghost" type="button">⇄ Takas Et</button>
+      <button id="convBtn" type="button">Çevir</button>
+    </div>
+    <div class="result-box"><div class="big" id="convRes">—</div><div class="formula" id="convFormula"></div></div>
+  </section>
+  <section id="tab-prog" class="tab">
+    <label class="lbl" for="inBin">BIN (ikilik)</label>
+    <input type="text" id="inBin" inputmode="text" placeholder="örn: 1010" autocomplete="off">
+    <label class="lbl" for="inOct">OCT (sekizlik)</label>
+    <input type="text" id="inOct" placeholder="örn: 12" autocomplete="off">
+    <label class="lbl" for="inDec">DEC (onluk)</label>
+    <input type="text" id="inDec" inputmode="numeric" placeholder="örn: 10" autocomplete="off">
+    <label class="lbl" for="inHex">HEX (onaltılık)</label>
+    <input type="text" id="inHex" placeholder="örn: A" autocomplete="off">
+    <div class="warn" id="progWarn"></div>
+    <div class="row2">
+      <div><label class="lbl" for="opB">İkinci işlenen B (onluk)</label><input type="text" id="opB" value="3"></div>
+      <div><label class="lbl" for="bitW">Bit genişliği (NOT için)</label>
+        <select id="bitW" class="sel"><option value="8">8-bit</option><option value="16">16-bit</option><option value="32" selected>32-bit</option><option value="64">64-bit</option></select>
+      </div>
+    </div>
+    <div class="bitops">
+      <button data-bit="AND">AND</button>
+      <button data-bit="OR">OR</button>
+      <button data-bit="XOR">XOR</button>
+      <button data-bit="NOT">NOT A</button>
+      <button data-bit="SHL">A ≪ B</button>
+      <button data-bit="SHR">A ≫ B</button>
+      <button data-bit="CLEAR" style="background:var(--danger);color:#fff">Temizle</button>
+      <button data-bit="COPY" style="background:var(--eq);color:#fff">DEC Kopyala</button>
+    </div>
+    <div class="result-box"><div class="big" id="progRes">—</div><div class="formula" id="progFormula"></div></div>
+  </section>
+  <section id="tab-eq" class="tab">
+    <p style="color:var(--muted);font-size:.9rem;margin:4px 0">ax² + bx + c = 0 • a=0 ise ax+b=0 olarak çözer.</p>
+    <div class="row3">
+      <div><label class="lbl" for="coefA">a</label><input type="text" id="coefA" value="1" inputmode="decimal"></div>
+      <div><label class="lbl" for="coefB">b</label><input type="text" id="coefB" value="-3" inputmode="decimal"></div>
+      <div><label class="lbl" for="coefC">c</label><input type="text" id="coefC" value="2" inputmode="decimal"></div>
+    </div>
+    <div class="btnrow">
+      <button id="solveBtn" type="button">Çöz</button>
+      <button id="eqClear" class="ghost" type="button">Temizle</button>
+    </div>
+    <div class="result-box"><div class="big" id="eqRes">—</div><div class="formula" id="eqDetail"></div></div>
+  </section>
+</div>
+<footer>eval() kullanılmaz • güvenli ayrıştırıcı • geçmiş cihazınızda saklanır</footer>
+<script>
+"use strict";
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);themeBtn.textContent=(t==='dark')?'🌙':'☀️';try{localStorage.setItem('calcTheme',t);}catch(e){}}
+let savedTheme='dark';try{savedTheme=localStorage.getItem('calcTheme')||'dark';}catch(e){}
+applyTheme(savedTheme);
+themeBtn.addEventListener('click',()=>{applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');});
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+  });
+});
+let expr='';
+let ans=0, hasAns=false;
+let mem=0;
+let isDeg=true, secondMode=false, sciMode=false, fixDigits=null;
+try{
+  const m=localStorage.getItem('calcMem'); if(m!==null) mem=parseFloat(m)||0;
+  const a=localStorage.getItem('calcAns'); if(a!==null){ans=parseFloat(a); hasAns=true;}
+  const d=localStorage.getItem('calcDeg'); if(d!==null) isDeg=(d==='1');
+  const f=localStorage.getItem('calcFix'); if(f!==null&&f!=='') fixDigits=parseInt(f,10);
+}catch(e){}
+const exprHist=document.getElementById('exprHist');
+const exprMain=document.getElementById('exprMain');
+const errorBox=document.getElementById('errorBox');
+const degBtn=document.getElementById('degBtn');
+const sciBtn=document.getElementById('sciBtn');
+const fixSel=document.getElementById('fixSel');
+const memInd=document.getElementById('memInd');
+if(fixSel&&fixDigits!==null) fixSel.value=String(fixDigits);
+function refreshToolbar(){
+  degBtn.textContent=isDeg?'DEG':'RAD';
+  degBtn.classList.toggle('on',isDeg);
+  sciBtn.classList.toggle('on',sciMode);
+  memInd.textContent='M:'+(Math.round(mem*1e10)/1e10);
+  const b2=document.getElementById('btn2nd');
+  if(b2) b2.classList.toggle('inv',secondMode);
+  document.getElementById('bSin').textContent=secondMode?'asin':'sin';
+  document.getElementById('bCos').textContent=secondMode?'acos':'cos';
+  document.getElementById('bTan').textContent=secondMode?'atan':'tan';
+}
+degBtn.addEventListener('click',()=>{isDeg=!isDeg;try{localStorage.setItem('calcDeg',isDeg?'1':'0');}catch(e){}refreshToolbar();});
+sciBtn.addEventListener('click',()=>{sciMode=!sciMode;refreshToolbar();});
+fixSel.addEventListener('change',()=>{fixDigits=(fixSel.value==='')?null:parseInt(fixSel.value,10);try{localStorage.setItem('calcFix',fixSel.value);}catch(e){}});
+refreshToolbar();
+let calcMode='sci';
+try{calcMode=localStorage.getItem('calcMode')||'sci';}catch(e){}
+function applyCalcMode(m){
+  calcMode=(m==='basic')?'basic':'sci';
+  const sg=document.getElementById('sciGrid');
+  if(sg) sg.style.display=(calcMode==='basic')?'none':'';
+  const mb=document.getElementById('modeBasic'),ms=document.getElementById('modeSci');
+  if(mb) mb.classList.toggle('on',calcMode==='basic');
+  if(ms) ms.classList.toggle('on',calcMode==='sci');
+  try{localStorage.setItem('calcMode',calcMode);}catch(e){}
+}
+document.getElementById('modeBasic')?.addEventListener('click',()=>applyCalcMode('basic'));
+document.getElementById('modeSci')?.addEventListener('click',()=>applyCalcMode('sci'));
+applyCalcMode(calcMode);
+function renderMain(){
+  exprHist.textContent=expr||' ';
+  exprMain.textContent=expr||'0';
+}
+renderMain();
+function showError(msg){errorBox.textContent=msg||'';}
+function fmtInput(n){return String(n).replace('.',',');}
+function insertText(t){
+  showError('');
+  if(t==='2nd'){secondMode=!secondMode;refreshToolbar();return;}
+  expr+=t; renderMain();
+  const sh=document.getElementById('exprHist'); sh.scrollLeft=sh.scrollWidth;
+}
+document.querySelectorAll('#tab-calc button.key').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(btn.dataset.ins!==undefined){insertText(btn.dataset.ins);return;}
+    if(btn.dataset.fn){
+      const f=btn.dataset.fn;
+      if(secondMode){
+        if(f==='sin')insertText('asin(');
+        else if(f==='cos')insertText('acos(');
+        else if(f==='tan')insertText('atan(');
+        secondMode=false;refreshToolbar();
+      }else insertText(f+'(');
+      return;
+    }
+    const act=btn.dataset.act;
+    if(act==='ac'){expr='';showError('');renderMain();}
+    else if(act==='del'){expr=expr.slice(0,-1);showError('');renderMain();}
+    else if(act==='eq')doEquals();
+    else if(act==='neg'){
+      showError('');
+      if(!expr){expr='-';renderMain();return;}
+      expr='-('+expr+')';renderMain();
+    }
+    else if(act==='inv'){showError('');if(!expr)return;expr='1/('+expr+')';renderMain();}
+    else if(act==='abs'){showError('');if(!expr)return;expr='abs('+expr+')';renderMain();}
+  });
+});
+function memSave(){try{localStorage.setItem('calcMem',String(mem));}catch(e){}refreshToolbar();}
+function currentValue(){
+  try{const r=evalExpr(expr||'0');return r;}catch(e){return NaN;}
+}
+document.querySelectorAll('[data-mem]').forEach(b=>b.addEventListener('click',()=>{
+  const k=b.dataset.mem;const v=currentValue();
+  if(k==='MC'){mem=0;}
+  else if(k==='MR'){showError('');expr+=fmtInput(mem);renderMain();}
+  else if(k==='MS'){if(!isNaN(v))mem=v;}
+  else if(k==='M+'){if(!isNaN(v))mem+=v;}
+  else if(k==='M-'){if(!isNaN(v))mem-=v;}
+  memSave();
+}));
+function turkToDot(s){return s.replace(/,/g,'.');}
+function factorial(n){
+  if(n<0||!Number.isInteger(n))throw new Error('Hata: Faktöriyel yalnızca 0 ve pozitif tam sayılar için tanımlıdır.');
+  if(n>170)throw new Error('Hata: Faktöriyel sonucu çok büyük (0–170 aralığını kullanın).');
+  let r=1;for(let i=2;i<=n;i++)r*=i;return r;
+}
+function assertInt(v,msg){
+  if(typeof v!=='number'||isNaN(v)||!Number.isInteger(v))throw new Error(msg);
+  return v;
+}
+function nCrCalc(n,r){
+  assertInt(n,'Hata: nCr yalnızca tam sayılar için tanımlıdır. Örn: nCr(5,2).');
+  assertInt(r,'Hata: nCr yalnızca tam sayılar için tanımlıdır. Örn: nCr(5,2).');
+  if(n<0||r<0)throw new Error('Hata: nCr negatif sayılar için tanımlı değildir (n≥0, r≥0 olmalı).');
+  if(r>n)throw new Error('Hata: nCr için r, n\'den büyük olamaz.');
+  const v=factorial(n)/(factorial(r)*factorial(n-r));
+  if(!isFinite(v)||isNaN(v))throw new Error('Hata: nCr sonucu çok büyük (n ≤ 170 kullanın).');
+  return v;
+}
+function nPrCalc(n,r){
+  assertInt(n,'Hata: nPr yalnızca tam sayılar için tanımlıdır. Örn: nPr(5,2).');
+  assertInt(r,'Hata: nPr yalnızca tam sayılar için tanımlıdır. Örn: nPr(5,2).');
+  if(n<0||r<0)throw new Error('Hata: nPr negatif sayılar için tanımlı değildir (n≥0, r≥0 olmalı).');
+  if(r>n)throw new Error('Hata: nPr için r, n\'den büyük olamaz.');
+  const v=factorial(n)/factorial(n-r);
+  if(!isFinite(v)||isNaN(v))throw new Error('Hata: nPr sonucu çok büyük (n ≤ 170 kullanın).');
+  return v;
+}
+function gcdCalc(a,b){
+  assertInt(a,'Hata: EBOB (gcd) yalnızca tam sayılar için tanımlıdır. Örn: gcd(12,18).');
+  assertInt(b,'Hata: EBOB (gcd) yalnızca tam sayılar için tanımlıdır. Örn: gcd(12,18).');
+  a=Math.abs(a);b=Math.abs(b);
+  if(a===0&&b===0)throw new Error('Hata: gcd(0,0) tanımsızdır.');
+  while(b!==0){const t=a%b;a=b;b=t;}
+  return a;
+}
+function lcmCalc(a,b){
+  assertInt(a,'Hata: EKOK (lcm) yalnızca tam sayılar için tanımlıdır. Örn: lcm(4,6).');
+  assertInt(b,'Hata: EKOK (lcm) yalnızca tam sayılar için tanımlıdır. Örn: lcm(4,6).');
+  a=Math.abs(a);b=Math.abs(b);
+  if(a===0||b===0)return 0;
+  const g=gcdCalc(a,b);
+  const v=(a/g)*b;
+  if(!isFinite(v))throw new Error('Hata: EKOK sonucu çok büyük.');
+  return v;
+}
+function rootCalc(y,n){
+  assertInt(n,'Hata: Kök derecesi tam sayı olmalıdır. Örn: root(32,5).');
+  if(n===0)throw new Error('Hata: Kök derecesi 0 olamaz.');
+  if(y<0&&n%2===0)throw new Error('Hata: Negatif sayının çift dereceli kökü reel değildir.');
+  if(y<0)return -Math.pow(-y,1/n);
+  if(y===0){if(n<0)throw new Error('Hata: Sıfırın negatif kuvveti tanımsızdır.');return 0;}
+  if(n<0)return 1/Math.pow(y,1/(-n));
+  return Math.pow(y,1/n);
+}
+function logbCalc(x,taban){
+  if(!(x>0))throw new Error('Hata: logb için x pozitif olmalıdır. Örn: logb(25,5).');
+  if(!(taban>0)||taban===1)throw new Error('Hata: logb için taban pozitif ve 1\'den farklı olmalıdır.');
+  return Math.log(x)/Math.log(taban);
+}
+function toFraction(v,maxDen,tol){
+  maxDen=maxDen||1000;tol=tol||1e-9;
+  if(typeof v!=='number'||isNaN(v))throw new Error('Hata: Kesir çevirisi için geçerli sayı girin.');
+  if(!isFinite(v))throw new Error('Hata: Sonsuz değer kesre çevrilemez.');
+  if(Math.abs(v-Math.round(v))<tol)return String(Math.round(v));
+  const sign=v<0?-1:1;const x=Math.abs(v);
+  let bestN=1,bestD=1,bestErr=Math.abs(x-1);
+  for(let d=1;d<=maxDen;d++){const n=Math.round(x*d);const err=Math.abs(n/d-x);if(err<bestErr){bestErr=err;bestN=n;bestD=d;}if(err<tol)break;}
+  const g=gcdCalc(bestN,bestD);bestN/=g;bestD/=g;
+  return (sign*bestN)+'/'+bestD;
+}
+function tokenize(src){
+  let s=turkToDot(src);
+  s=s.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/–/g,'-');
+  s=s.replace(/π/g,'pi').replace(/τ/g,'tau').replace(/φ|Φ/g,'phi').replace(/√/g,'sqrt');
+  const tokens=[];let i=0;
+  const isD=c=>c>='0'&&c<='9';
+  while(i<s.length){
+    const c=s[i];
+    if(c===' '||c==='\t'||c==='\n'){i++;continue;}
+    if(isD(c)||(c==='.'&&isD(s[i+1]||''))){
+      let num='';while(i<s.length&&(isD(s[i])||s[i]==='.')){num+=s[i];i++;}
+      if(i<s.length&&(s[i]==='E'||s[i]==='e')&&(/[0-9+-]/.test(s[i+1]||''))){
+        const save=i;let es=s[i];i++;
+        if(s[i]==='+'||s[i]==='-'){es+=s[i];i++;}
+        let dg='';while(i<s.length&&isD(s[i])){dg+=s[i];i++;}
+        if(dg===''){i=save;}else{num+=es+dg;}
+      }
+      if((num.match(/\./g)||[]).length>1)throw new Error('Geçersiz ifade: hatalı sayı "'+num+'".');
+      tokens.push({t:'num',v:parseFloat(num)});continue;
+    }
+    if((c>='a'&&c<='z')||(c>='A'&&c<='Z')){
+      let id='';while(i<s.length&&/[a-zA-Z0-9_]/.test(s[i])){id+=s[i];i++;}
+      const low=id.toLowerCase();
+      if(['sin','cos','tan','asin','acos','atan','sinh','cosh','tanh','log','ln','log2','sqrt','cbrt','abs','ncr','npr','comb','perm','gcd','lcm','ebob','ekok','root','logb','mod','pi','e','phi','tau','ans'].includes(low)){
+        if(low==='mod')tokens.push({t:'op',v:'mod'});
+        else if(['pi','e','phi','tau','ans'].includes(low))tokens.push({t:'const',v:low});
+        else tokens.push({t:'fn',v:low});
+      }else throw new Error('Geçersiz ifade: bilinmeyen "'+id+'".');
+      continue;
+    }
+    if('+-*/%^!(),'.includes(c)){
+      if(c==='('||c===')'||c===',')tokens.push({t:c});else tokens.push({t:'op',v:c});
+      i++;continue;
+    }
+    throw new Error('Geçersiz ifade: "'+c+'" karakteri kullanılamaz.');
+  }
+  const out=[];
+  for(let k=0;k<tokens.length;k++){
+    out.push(tokens[k]);
+    const a=tokens[k],b=tokens[k+1];
+    if(!b)break;
+    const aEnd=(a.t==='num'||a.t==='const'||a.t===')'||(a.t==='op'&&a.v==='!')||(a.t==='op'&&a.v==='%'));
+    const bStart=(b.t==='fn'||b.t==='const'||b.t==='num'||b.t==='(');
+    if(aEnd&&bStart)out.push({t:'op',v:'*'});
+  }
+  return out;
+}
+function makeParser(tokens){
+  let pos=0;
+  const peek=()=>tokens[pos];
+  const next=()=>tokens[pos++];
+  function parseE(){
+    let v=parseT();
+    while(peek()&&(peek().t==='op')&&(peek().v==='+'||peek().v==='-')){
+      const op=next().v;
+      const startPos=pos;
+      const r=parseT();
+      const lastTok=tokens[pos-1];
+      const slice=tokens.slice(startPos,pos);
+      const isPct=lastTok&&lastTok.t==='op'&&lastTok.v==='%';
+      const hasMulDiv=slice.some(t=>t.t==='op'&&(t.v==='*'||t.v==='/'||t.v==='mod'));
+      if(isPct&&!hasMulDiv){
+        v=(op==='+')?(v+v*r):(v-v*r);
+      }else{
+        v=(op==='+')?(v+r):(v-r);
+      }
+    }
+    return v;
+  }
+  function parseT(){
+    let v=parseF();
+    while(peek()&&peek().t==='op'&&['*','/','mod'].includes(peek().v)){
+      const op=next().v;const r=parseF();
+      if(op==='*')v=v*r;
+      else if(op==='/'){if(r===0)throw new Error('Hata: Sıfıra bölünemez.');v=v/r;}
+      else if(op==='mod'){if(r===0)throw new Error('Hata: Sıfıra bölünemez (mod).');v=v%r;}
+    }
+    return v;
+  }
+  function parseF(){
+    let v=parseU();
+    if(peek()&&peek().t==='op'&&peek().v==='^'){
+      next();const e=parseF();
+      v=Math.pow(v,e);
+      if(!isFinite(v)||isNaN(v))throw new Error('Hata: Tanımsız üs sonucu.');
+    }
+    return v;
+  }
+  function parseU(){
+    if(peek()&&peek().t==='op'&&(peek().v==='+'||peek().v==='-')){
+      const op=next().v;const v=parseU();return op==='-'?-v:v;
+    }
+    return parseP();
+  }
+  function parseP(){
+    let v=parseA();
+    while(peek()&&peek().t==='op'&&(peek().v==='!'||peek().v==='%')){
+      const op=next().v;
+      if(op==='!')v=factorial(v);
+      else v=v/100;
+    }
+    return v;
+  }
+  function parseA(){
+    const tk=peek();
+    if(!tk)throw new Error('Geçersiz ifade: eksik değer.');
+    if(tk.t==='num'){next();if(!isFinite(tk.v))throw new Error('Geçersiz ifade.');return tk.v;}
+    if(tk.t==='const'){
+      next();
+      if(tk.v==='pi')return Math.PI;
+      if(tk.v==='e')return Math.E;
+      if(tk.v==='phi')return 1.618033988749895;
+      if(tk.v==='tau')return 2*Math.PI;
+      if(tk.v==='ans'){if(!hasAns)throw new Error('Hata: Ans henüz boş.');return ans;}
+    }
+    if(tk.t==='fn'){
+      const fn=next().v;
+      const o=next();if(!o||o.t!=='(')throw new Error('Geçersiz ifade: '+fn+' için "(" gerekli.');
+      const arg1=parseE();
+      let arg2=null,has2=false;
+      if(peek()&&peek().t===','){next();arg2=parseE();has2=true;}
+      const c=next();if(!c||c.t!==')')throw new Error('Geçersiz ifade: ")" eksik.');
+      return applyFn(fn,arg1,arg2,has2);
+    }
+    if(tk.t==='('){next();const v=parseE();const c=next();if(!c||c.t!==')')throw new Error('Geçersiz ifade: ")" eksik.');return v;}
+    throw new Error('Geçersiz ifade.');
+  }
+  function applyFn(fn,x,y,hasY){
+    const d2r=d=>d*Math.PI/180, r2d=r=>r*180/Math.PI;
+    const need2=(name)=>{if(!hasY)throw new Error('Hata: '+name+' iki argüman ister. Örn: '+name+'(5,2).');};
+    const need1=(name)=>{if(hasY)throw new Error('Hata: '+name+' tek argüman alır.');};
+    switch(fn){
+      case 'sin':need1('sin');return Math.sin(isDeg?d2r(x):x);
+      case 'cos':need1('cos');return Math.cos(isDeg?d2r(x):x);
+      case 'tan':need1('tan');{const v=Math.tan(isDeg?d2r(x):x);if(!isFinite(v))throw new Error('Hata: tan tanımsız.');return v;}
+      case 'asin':need1('asin');{if(x<-1||x>1)throw new Error('Hata: asin yalnızca [-1,1] aralığında.');const v=Math.asin(x);return isDeg?r2d(v):v;}
+      case 'acos':need1('acos');{if(x<-1||x>1)throw new Error('Hata: acos yalnızca [-1,1] aralığında.');const v=Math.acos(x);return isDeg?r2d(v):v;}
+      case 'atan':need1('atan');{const v=Math.atan(x);return isDeg?r2d(v):v;}
+      case 'sinh':need1('sinh');return Math.sinh(x);
+      case 'cosh':need1('cosh');return Math.cosh(x);
+      case 'tanh':need1('tanh');return Math.tanh(x);
+      case 'log':need1('log');{if(x<=0)throw new Error('Hata: log yalnızca pozitif sayılar için.');return Math.log10(x);}
+      case 'ln':need1('ln');{if(x<=0)throw new Error('Hata: ln yalnızca pozitif sayılar için.');return Math.log(x);}
+      case 'log2':need1('log2');{if(x<=0)throw new Error('Hata: log2 yalnızca pozitif sayılar için.');return Math.log2(x);}
+      case 'sqrt':need1('sqrt');{if(x<0)throw new Error('Hata: Negatif sayının karekökü alınamaz.');return Math.sqrt(x);}
+      case 'cbrt':need1('cbrt');return Math.cbrt(x);
+      case 'abs':need1('abs');return Math.abs(x);
+      case 'ncr':
+      case 'comb':need2(fn);return nCrCalc(x,y);
+      case 'npr':
+      case 'perm':need2(fn);return nPrCalc(x,y);
+      case 'gcd':
+      case 'ebob':need2(fn);return gcdCalc(x,y);
+      case 'lcm':
+      case 'ekok':need2(fn);return lcmCalc(x,y);
+      case 'root':need2('root');return rootCalc(x,y);
+      case 'logb':need2('logb');return logbCalc(x,y);
+      default:throw new Error('Geçersiz ifade: bilinmeyen fonksiyon.');
+    }
+  }
+  return {parse(){if(tokens.length===0)throw new Error('Geçersiz ifade: boş giriş.');const v=parseE();if(pos<tokens.length)throw new Error('Geçersiz ifade: fazla karakter.');if(typeof v!=='number'||isNaN(v))throw new Error('Hata: Tanımsız sonuç.');return v;}};
+}
+function evalExpr(s){
+  const toks=tokenize(s);
+  return makeParser(toks).parse();
+}
+function formatNumber(n){
+  if(typeof n!=='number'||isNaN(n))throw new Error('Hata: Tanımsız sonuç.');
+  if(!isFinite(n))throw new Error('Hata: Sonuç sonsuz (sıfıra bölme olabilir).');
+  if(fixDigits!==null){return Number(n.toFixed(fixDigits)).toString().replace('.',',');}
+  if(sciMode){return n.toExponential(6).replace('.',',');}
+  if(n!==0&&(Math.abs(n)>=1e12||Math.abs(n)<1e-9))return String(n).replace('.',',');
+  const r=parseFloat(n.toPrecision(12));
+  return String(r).replace('.',',');
+}
+let history=[];
+try{history=JSON.parse(localStorage.getItem('calcHistory')||'[]');if(!Array.isArray(history))history=[];}catch(e){history=[];}
+function saveHist(){try{localStorage.setItem('calcHistory',JSON.stringify(history.slice(0,30)));}catch(e){}}
+function renderHist(){
+  const ul=document.getElementById('histList');ul.innerHTML='';
+  if(history.length===0){ul.innerHTML='<li><span style="color:var(--muted);font-size:.85rem">Henüz işlem yok.</span></li>';return;}
+  history.forEach((h,idx)=>{
+    const li=document.createElement('li');
+    const t=document.createElement('div');t.className='htext';
+    const e=document.createElement('span');e.textContent=h.expr;e.style.color='var(--muted)';
+    const b=document.createElement('b');b.textContent='= '+h.res;
+    t.appendChild(e);t.appendChild(b);
+    t.title='Geri yüklemek için tıklayın';
+    t.addEventListener('click',()=>{expr=h.raw;showError('');renderMain();});
+    const del=document.createElement('button');del.className='small-btn';del.textContent='Sil';
+    del.addEventListener('click',()=>{history.splice(idx,1);saveHist();renderHist();});
+    li.appendChild(t);li.appendChild(del);ul.appendChild(li);
+  });
+}
+renderHist();
+document.getElementById('clearHist').addEventListener('click',()=>{history=[];saveHist();renderHist();});
+document.getElementById('copyBtn').addEventListener('click',async()=>{
+  const txt=exprMain.textContent;
+  try{await navigator.clipboard.writeText(txt);showError('');errorBox.textContent='Kopyalandı ✓';setTimeout(()=>{errorBox.textContent='';},1200);}
+  catch(e){showError('Kopyalama başarısız.');}
+});
+function doEquals(){
+  showError('');
+  if(!expr.trim()){showError('Geçersiz ifade: boş giriş.');return;}
+  try{
+    const val=evalExpr(expr);
+    const out=formatNumber(val);
+    ans=val;hasAns=true;try{localStorage.setItem('calcAns',String(val));}catch(e){}
+    history.unshift({expr:expr+' =',res:out,raw:fmtInput(out)});
+    history=history.slice(0,30);saveHist();renderHist();
+    exprHist.textContent=expr+' =';
+    exprMain.textContent=out;
+    expr=out;
+  }catch(err){showError(err.message||'Geçersiz ifade.');}
+}
+function fracGcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t;}return a||1;}
+function doFraction(){
+  showError('');
+  let v;
+  try{v=currentValue();}catch(e){showError(e.message||'Geçersiz ifade.');return;}
+  if(isNaN(v)||!isFinite(v)){showError('Hata: Kesre çevrilemez sonuç.');return;}
+  if(Number.isInteger(v)){exprHist.textContent=expr+' =';exprMain.textContent=fmtInput(v);expr=String(v).replace('.',',');return;}
+  try{
+    const out=toFraction(v,1000,1e-9);
+    exprHist.textContent=exprMain.textContent+' ≈ '+out;
+    exprMain.textContent=out;
+    expr=out;
+  }catch(e){showError(e.message||'Geçersiz ifade.');}
+}
+document.querySelector('[data-act="frac"]')?.addEventListener('click',doFraction);
+document.getElementById('shareBtn')?.addEventListener('click',async()=>{
+  showError('');
+  if(!expr.trim()){showError('Paylaşılacak ifade yok.');return;}
+  const url=location.pathname+'?q='+encodeURIComponent(expr);
+  try{history.replaceState(null,'',url);}catch(e){}
+  const full=location.origin+location.pathname+'?q='+encodeURIComponent(expr);
+  const link=location.protocol==='file:'?url:full;
+  try{await navigator.clipboard.writeText(location.protocol==='file:'?link:full);errorBox.textContent='Link kopyalandı ✓';}
+  catch(e){errorBox.textContent=link;showError('Kopyalama başarısız, link üstte.');return;}
+  setTimeout(()=>{errorBox.textContent='';},1500);
+});
+(()=>{try{const q=new URLSearchParams(location.search).get('q');if(q){expr=q;showError('');renderMain();doEquals();}}catch(e){}})();
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('tab-calc').classList.contains('active'))return;
+  const tag=(document.activeElement&&document.activeElement.tagName)||'';
+  if(tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA')return;
+  const k=e.key;
+  if(/^[0-9]$/.test(k)){insertText(k);e.preventDefault();}
+  else if(k==='+'||k==='-'||k==='*'||k==='/'||k==='%'||k==='^'||k==='('||k===')'||k==='.'||k==='!' ){insertText(k==='*'?'×':(k==='/'?'÷':k));e.preventDefault();}
+  else if(k===','){insertText(',');e.preventDefault();}
+  else if(k==='Enter'||k==='='){doEquals();e.preventDefault();}
+  else if(k==='Backspace'){expr=expr.slice(0,-1);showError('');renderMain();e.preventDefault();}
+  else if(k==='Escape'){expr='';showError('');renderMain();e.preventDefault();}
+});
+const UNITS={
+  length:{ad:'Uzunluk',base:'m',units:{mm:['Milimetre',0.001],cm:['Santimetre',0.01],m:['Metre',1],km:['Kilometre',1000],in:['İnç (in)',0.0254],ft:['Fit (ft)',0.3048],yd:['Yarda (yd)',0.9144],mil:['Mil',1609.344]}},
+  weight:{ad:'Ağırlık',base:'kg',units:{mg:['Miligram',1e-6],g:['Gram',0.001],kg:['Kilogram',1],ton:['Ton',1000],lb:['Pound (lb)',0.45359237],oz:['Ons (oz)',0.028349523125]}},
+  temp:{ad:'Sıcaklık',base:'°C',units:{C:['Santigrat (°C)',1],F:['Fahrenhayt (°F)',1],K:['Kelvin (K)',1]}},
+  area:{ad:'Alan',base:'m²',units:{mm2:['mm²',1e-6],cm2:['cm²',1e-4],m2:['m²',1],ha:['Hektar',10000],km2:['km²',1e6],ft2:['ft²',0.09290304],acre:['Acre',4046.8564224]}},
+  volume:{ad:'Hacim',base:'m³',units:{ml:['Mililitre (mL)',1e-6],L:['Litre (L)',0.001],cm3:['cm³',1e-6],m3:['m³',1],ft3:['ft³',0.028316846592],gal:['Galon (US)',0.003785411784]}},
+  time:{ad:'Zaman',base:'sn',units:{ms:['Milisalise',0.001],s:['Saniye',1],min:['Dakika',60],h:['Saat',3600],day:['Gün',86400],week:['Hafta',604800],year:['Yıl (365,25g)',31557600]}},
+  speed:{ad:'Hız',base:'m/s',units:{'m/s':['m/s',1],'km/h':['km/h',1/3.6],mph:['mph',0.44704],'ft/s':['ft/s',0.3048],knot:['Knot',0.514444]}},
+  pressure:{ad:'Basınç',base:'Pa',units:{Pa:['Pascal (Pa)',1],kPa:['kPa',1000],bar:['Bar',100000],psi:['psi',6894.75729317],atm:['Atmosfer',101325],mmHg:['mmHg',133.322387415]}},
+  energy:{ad:'Enerji',base:'J',units:{J:['Joule (J)',1],kJ:['kJ',1000],cal:['Kalori',4.184],kcal:['Kilokalori',4184],Wh:['Wh',3600],kWh:['kWh',3600000]}}
+};
+const catSel=document.getElementById('catSel'),fromSel=document.getElementById('fromSel'),toSel=document.getElementById('toSel');
+function fillUnits(){
+  const c=UNITS[catSel.value];fromSel.innerHTML='';toSel.innerHTML='';
+  Object.keys(c.units).forEach(k=>{const o1=document.createElement('option');o1.value=k;o1.textContent=c.units[k][0];fromSel.appendChild(o1);const o2=document.createElement('option');o2.value=k;o2.textContent=c.units[k][0];toSel.appendChild(o2);});
+  fromSel.selectedIndex=0;toSel.selectedIndex=Math.min(1,toSel.options.length-1);
+}
+function parseTrNum(s){s=String(s).trim().replace(/\s+/g,'').replace(/,/g,'.');const v=parseFloat(s);return v;}
+function convertTemp(v,from,to){
+  let c;if(from==='C')c=v;else if(from==='F')c=(v-32)*5/9;else c=v-273.15;
+  if(to==='C')return {v:c,f:'°C = (°F − 32) × 5/9 • K = °C + 273,15'};
+  if(to==='F')return {v:c*9/5+32,f:'°F = °C × 9/5 + 32'};
+  return {v:c+273.15,f:'K = °C + 273,15'};
+}
+function doConvert(){
+  const cat=catSel.value,c=UNITS[cat];
+  const v=parseTrNum(document.getElementById('convVal').value);
+  const res=document.getElementById('convRes'),frm=document.getElementById('convFormula');
+  if(isNaN(v)){res.textContent='Geçerli bir sayı girin.';frm.textContent='';return;}
+  const f=fromSel.value,t=toSel.value;
+  if(cat==='temp'){
+    if(f==='K'&&v<0){res.textContent='Hata: Kelvin 0\'ın altında olamaz.';frm.textContent='';return;}
+    const r=convertTemp(v,f,t);
+    res.textContent=fmtInput(Math.round(r.v*1e8)/1e8)+' '+t;
+    frm.textContent='Formül: '+r.f;
+    return;
+  }
+  const base=v*c.units[f][1];
+  const out=base/c.units[t][1];
+  res.textContent=fmtInput(Math.round(out*1e8)/1e8)+' '+t;
+  frm.textContent='Formül: '+fmtInput(v)+' '+f+' × '+c.units[f][1]+' ÷ '+c.units[t][1]+' ('+c.base+' tabanında)';
+}
+catSel.addEventListener('change',fillUnits);
+document.getElementById('convBtn').addEventListener('click',doConvert);
+document.getElementById('convVal').addEventListener('input',doConvert);
+fromSel.addEventListener('change',doConvert);toSel.addEventListener('change',doConvert);
+document.getElementById('swapBtn').addEventListener('click',()=>{const a=fromSel.value;fromSel.value=toSel.value;toSel.value=a;doConvert();});
+fillUnits();
+const inBin=document.getElementById('inBin'),inOct=document.getElementById('inOct'),inDec=document.getElementById('inDec'),inHex=document.getElementById('inHex');
+const progWarn=document.getElementById('progWarn'),progRes=document.getElementById('progRes'),progFormula=document.getElementById('progFormula');
+let progLock=false;
+function progWarnUpdate(bi){
+  let w=[];
+  if(bi<0n)w.push('Negatif sayı: işaretli değer.');
+  const lim=BigInt(Number.MAX_SAFE_INTEGER);
+  if(bi>lim||bi<-lim)w.push('Büyük sayı uyarısı: güvenli tam sayı sınırını aşıyor; BigInt ile çevrildi.');
+  progWarn.textContent=w.join(' ');
+}
+function setProg(bi,skip){
+  progLock=true;
+  try{
+    const neg=bi<0n;
+    const mag=neg?-bi:bi;
+    const bin=(neg?'-':'')+mag.toString(2);
+    const oct=(neg?'-':'')+mag.toString(8);
+    const dec=bi.toString(10);
+    const hex=(neg?'-':'')+mag.toString(16).toUpperCase();
+    if(skip!=='bin')inBin.value=bin;
+    if(skip!=='oct')inOct.value=oct;
+    if(skip!=='dec')inDec.value=dec;
+    if(skip!=='hex')inHex.value=hex;
+    progWarnUpdate(bi);
+  }finally{progLock=false;}
+}
+function parseBig(s,base){
+  s=String(s).trim().replace(/\s+/g,'').replace(/_/g,'');
+  if(s==='')return null;
+  let neg=false;
+  if(s[0]==='-'){neg=true;s=s.slice(1);}
+  else if(s[0]==='+')s=s.slice(1);
+  if(/^0b/i.test(s)){base=2;s=s.slice(2);}
+  else if(/^0o/i.test(s)){base=8;s=s.slice(2);}
+  else if(/^0x/i.test(s)){base=16;s=s.slice(2);}
+  const maps={2:/^[01]+$/,8:/^[0-7]+$/,10:/^[0-9]+$/,16:/^[0-9a-fA-F]+$/};
+  if(!maps[base].test(s))return undefined;
+  let v=0n;
+  const dig='0123456789ABCDEF';
+  s=s.toUpperCase();
+  for(const ch of s){v=v*BigInt(base)+BigInt(dig.indexOf(ch));}
+  return neg?-v:v;
+}
+function bindProg(el,base){
+  el.addEventListener('input',()=>{
+    if(progLock)return;
+    const r=parseBig(el.value,base);
+    if(r===null){progWarn.textContent='';return;}
+    if(r===undefined){progWarn.textContent='Geçersiz basamak: bu tabana uygun değil.';return;}
+    setProg(r,el===inBin?'bin':el===inOct?'oct':el===inDec?'dec':'hex');
+    progWarnUpdate(r);
+  });
+}
+bindProg(inBin,2);bindProg(inOct,8);bindProg(inDec,10);bindProg(inHex,16);
+function curA(){const r=parseBig(inDec.value||'0',10);return (r===undefined||r===null)?0n:r;}
+function curB(){const r=parseBig(document.getElementById('opB').value||'0',10);return (r===undefined||r===null)?0n:r;}
+document.querySelectorAll('[data-bit]').forEach(b=>b.addEventListener('click',async()=>{
+  const op=b.dataset.bit;
+  if(op==='CLEAR'){inBin.value=inOct.value=inDec.value=inHex.value='';progRes.textContent='—';progFormula.textContent='';progWarn.textContent='';return;}
+  if(op==='COPY'){try{await navigator.clipboard.writeText(inDec.value);progFormula.textContent='DEC değeri kopyalandı ✓';}catch(e){progFormula.textContent='Kopyalama başarısız.';}return;}
+  const w=BigInt(document.getElementById('bitW').value);
+  const mask=(1n<<w)-1n;
+  const A=curA(),B=curB();
+  let r,txt;
+  if(op==='AND'){r=A&B;txt='A AND B';}
+  else if(op==='OR'){r=A|B;txt='A OR B';}
+  else if(op==='XOR'){r=A^B;txt='A XOR B';}
+  else if(op==='NOT'){r=(~A)&mask;txt='NOT A ('+w+'-bit maskeli)';}
+  else if(op==='SHL'){r=A<<B;txt='A ≪ B (sola kaydır)';}
+  else{const sh=B<0n?-B:B;r=(B<0n)?(A<<sh):(A>>sh);txt='A ≫ B (sağa kaydır)';}
+  setProg(r);
+  progRes.textContent='DEC: '+r.toString(10);
+  progFormula.textContent=txt+' • HEX: '+((r<0n?'-':'')+(r<0n?-r:r).toString(16).toUpperCase())+' • BIN: '+((r<0n?'-':'')+(r<0n?-r:r).toString(2));
+}));
+document.getElementById('solveBtn').addEventListener('click',()=>{
+  const R=id=>parseTrNum(document.getElementById(id).value);
+  const a=R('coefA'),b=R('coefB'),c=R('coefC');
+  const res=document.getElementById('eqRes'),det=document.getElementById('eqDetail');
+  if([a,b,c].some(isNaN)){res.textContent='Lütfen a, b, c için geçerli sayılar girin (virgül kullanabilirsiniz).';det.textContent='';return;}
+  const f=n=>fmtInput(Math.round(n*1e10)/1e10);
+  if(a===0){
+    if(b===0){res.textContent=(c===0)?'Sonsuz çözüm: 0 = 0 (tüm x değerleri).':'Çözüm yok: tutarsız denklem.';det.textContent='a=0, b=0 durumu.';return;}
+    const x=-c/b;
+    res.textContent='Birinci derece: x = '+f(x);
+    det.textContent='ax+b=0 → x = −c/b = '+f(x);
+    return;
+  }
+  const d=b*b-4*a*c;
+  if(d>0){
+    const x1=(-b+Math.sqrt(d))/(2*a),x2=(-b-Math.sqrt(d))/(2*a);
+    res.textContent='İki reel kök: x₁ = '+f(x1)+', x₂ = '+f(x2);
+    det.textContent='Δ (delta) = b² − 4ac = '+f(d)+' > 0 → iki farklı reel kök.';
+  }else if(d===0||Math.abs(d)<1e-12){
+    const x=-b/(2*a);
+    res.textContent='Çift (çakışık) kök: x = '+f(x);
+    det.textContent='Δ = 0 → tek katlı çift kök.';
+  }else{
+    const rp=-b/(2*a),ip=Math.sqrt(-d)/(2*a);
+    res.textContent='Kompleks kökler: x₁ = '+f(rp)+' + '+f(ip)+'i, x₂ = '+f(rp)+' − '+f(ip)+'i';
+    det.textContent='Δ = '+f(d)+' < 0 → reel kök yok, iki kompleks eşlenik kök.';
+  }
+});
+document.getElementById('eqClear').addEventListener('click',()=>{
+  document.getElementById('coefA').value='';document.getElementById('coefB').value='';document.getElementById('coefC').value='';
+  document.getElementById('eqRes').textContent='—';document.getElementById('eqDetail').textContent='';
+});
+</script>
+</body>
+</html>
